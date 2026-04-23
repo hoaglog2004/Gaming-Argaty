@@ -1,0 +1,302 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/main}"
+>
+  <head>
+    <title>Thanh toán</title>
+  </head>
+
+  <body>
+    <main layout:fragment="content">
+      <div style="padding: 120px 0 80px">
+        <div class="container">
+          <div class="text-center mb-5">
+            <h1 class="section-title text-gradient">Thanh toán</h1>
+            <p class="section-subtitle">
+              Xác nhận đơn hàng và tiến hành thanh toán
+            </p>
+          </div>
+
+          <div class="card glass p-5">
+            <div th:if="${order != null}">
+              <p class="text-secondary mb-3">
+                Mã đơn hàng:
+                <strong class="text-primary" th:text="${order.orderCode}"
+                  >ORDER</strong
+                >
+              </p>
+              <p class="text-secondary mb-4">
+                Tổng tiền:
+                <strong
+                  class="text-primary"
+                  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"
+                  >0 ₫</strong
+                >
+              </p>
+              <p class="text-secondary mb-4">
+                Phương thức:
+                <strong
+                  class="text-primary"
+                  th:text="${order.paymentMethodDisplayName}"
+                  >-</strong
+                >
+              </p>
+            </div>
+
+            <div id="paymentNotice" class="alert alert-info" style="margin: 0">
+              <i class="bx bx-loader-alt bx-spin"></i>
+              <span>Đang tạo phiên thanh toán...</span>
+            </div>
+
+            <div
+              id="paymentSessionContainer"
+              class="mt-4"
+              style="display: none"
+            >
+              <div
+                id="paymentQrBlock"
+                style="display: none"
+                class="text-center mb-4"
+              >
+                <img
+                  id="paymentQrImage"
+                  alt="QR thanh toán"
+                  style="max-width: 280px; border-radius: 12px"
+                />
+                <p class="mt-3 mb-1 text-muted">
+                  Mã tham chiếu: <strong id="paymentTxRef">-</strong>
+                </p>
+                <p class="mb-3 text-muted">
+                  Hết hạn: <strong id="paymentExpireAt">-</strong>
+                </p>
+                <button
+                  id="bankConfirmBtn"
+                  type="button"
+                  class="btn btn-primary"
+                  style="display: none"
+                  onclick="confirmBankTransfer()"
+                >
+                  Tôi đã chuyển khoản
+                </button>
+              </div>
+
+              <div
+                id="paymentLinkBlock"
+                style="display: none"
+                class="text-center mb-4"
+              >
+                <a
+                  id="paymentLink"
+                  target="_blank"
+                  class="btn btn-primary btn-lg"
+                >
+                  Mở cổng thanh toán
+                </a>
+                <p class="mt-3 text-muted">
+                  Mã tham chiếu: <strong id="paymentTxRefLink">-</strong>
+                </p>
+              </div>
+
+              <div class="text-center">
+                <button
+                  type="button"
+                  class="btn btn-ghost"
+                  onclick="checkPaymentStatus()"
+                >
+                  Kiểm tra trạng thái thanh toán
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="mt-4"
+              style="display: flex; gap: 12px; justify-content: center"
+            >
+              <a class="btn btn-ghost" th:href="@{/checkout}">
+                Quay lại checkout
+              </a>
+              <a
+                class="btn btn-primary"
+                th:if="${order != null}"
+                th:href="@{/checkout/success(orderCode=${order.orderCode})}"
+              >
+                Xem trang hoàn tất
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <th:block layout:fragment="scripts">
+      <script th:inline="javascript">
+        const orderCode = /*[[${order.orderCode}]]*/ "";
+        const paymentMethod =
+          /*[[${order.paymentMethod != null ? order.paymentMethod.name() : ''}]]*/ "";
+        const isPaid = /*[[${order.isPaid}]]*/ false;
+
+        document.addEventListener("DOMContentLoaded", async function () {
+          if (!orderCode) {
+            updateNotice(
+              "danger",
+              "Không tìm thấy mã đơn hàng để khởi tạo thanh toán.",
+            );
+            return;
+          }
+
+          if (isPaid) {
+            updateNotice(
+              "success",
+              "Đơn hàng đã thanh toán. Bạn có thể xem trang thành công.",
+            );
+            return;
+          }
+
+          if (paymentMethod === "COD") {
+            updateNotice("info", "Đơn hàng COD sẽ thanh toán khi nhận hàng.");
+            return;
+          }
+
+          await createPaymentSession();
+        });
+
+        async function createPaymentSession() {
+          try {
+            const response = await fetch(
+              `/api/payments/${encodeURIComponent(orderCode)}/session`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRF-TOKEN":
+                    document.querySelector('input[name="_csrf"]')?.value || "",
+                },
+              },
+            );
+
+            let data = null;
+            try {
+              data = await response.json();
+            } catch (parseError) {
+              data = null;
+            }
+
+            if (!response.ok || !data || !data.success || !data.data) {
+              const message =
+                data && data.message
+                  ? data.message
+                  : "Không thể khởi tạo phiên thanh toán";
+              updateNotice("danger", message);
+              return;
+            }
+
+            renderPaymentSession(data.data);
+            updateNotice(
+              "success",
+              data.data.message || "Phiên thanh toán đã sẵn sàng",
+            );
+          } catch (error) {
+            updateNotice("danger", "Không thể kết nối dịch vụ thanh toán.");
+          }
+        }
+
+        function renderPaymentSession(session) {
+          const container = document.getElementById("paymentSessionContainer");
+          const qrBlock = document.getElementById("paymentQrBlock");
+          const linkBlock = document.getElementById("paymentLinkBlock");
+          const txRef = session.transactionRef || "-";
+
+          container.style.display = "block";
+
+          if (session.qrImageUrl) {
+            qrBlock.style.display = "block";
+            document.getElementById("paymentQrImage").src = session.qrImageUrl;
+            document.getElementById("paymentTxRef").textContent = txRef;
+            document.getElementById("paymentExpireAt").textContent =
+              session.expiresAt
+                ? new Date(session.expiresAt).toLocaleString("vi-VN")
+                : "-";
+            if (paymentMethod === "BANK_TRANSFER") {
+              document.getElementById("bankConfirmBtn").style.display =
+                "inline-flex";
+            }
+          }
+
+          if (session.paymentUrl) {
+            linkBlock.style.display = "block";
+            document.getElementById("paymentLink").href = session.paymentUrl;
+            document.getElementById("paymentTxRefLink").textContent = txRef;
+          }
+
+          if (!session.qrImageUrl && !session.paymentUrl) {
+            updateNotice(
+              "warning",
+              "Phiên thanh toán chưa có QR hoặc link hợp lệ, vui lòng thử lại.",
+            );
+          }
+        }
+
+        async function confirmBankTransfer() {
+          try {
+            const response = await fetch(
+              `/api/payments/${encodeURIComponent(orderCode)}/bank-confirm`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRF-TOKEN":
+                    document.querySelector('input[name="_csrf"]')?.value || "",
+                },
+              },
+            );
+            const data = await response.json();
+            if (!data.success) {
+              updateNotice(
+                "danger",
+                data.message || "Xác nhận thanh toán thất bại",
+              );
+              return;
+            }
+
+            updateNotice("success", "Xác nhận thanh toán thành công");
+            setTimeout(() => {
+              window.location.href = `/checkout/success?orderCode=${encodeURIComponent(orderCode)}`;
+            }, 900);
+          } catch (error) {
+            updateNotice("danger", "Không thể xác nhận thanh toán");
+          }
+        }
+
+        async function checkPaymentStatus() {
+          try {
+            const response = await fetch(
+              `/api/payments/${encodeURIComponent(orderCode)}/status`,
+            );
+            const data = await response.json();
+            if (data.success && data.data === true) {
+              updateNotice("success", "Đơn hàng đã được thanh toán");
+              setTimeout(() => {
+                window.location.href = `/checkout/success?orderCode=${encodeURIComponent(orderCode)}`;
+              }, 700);
+            } else {
+              updateNotice(
+                "info",
+                "Đơn hàng chưa ghi nhận thanh toán, vui lòng thử lại sau",
+              );
+            }
+          } catch (error) {
+            updateNotice("danger", "Không thể kiểm tra trạng thái thanh toán");
+          }
+        }
+
+        function updateNotice(type, message) {
+          const notice = document.getElementById("paymentNotice");
+          notice.className = `alert alert-${type}`;
+          notice.innerHTML = `<i class="bx bx-info-circle"></i><span>${message}</span>`;
+        }
+      </script>
+    </th:block>
+  </body>
+</html>

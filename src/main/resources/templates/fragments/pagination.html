@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <nav
+    th:fragment="pagination(page, baseUrl)"
+    class="pagination"
+    th:if="${page.totalPages > 1}"
+  >
+    <!-- Previous -->
+    <a
+      th:href="@{${baseUrl}(page=${page.page - 1})}"
+      th:classappend="${page.first} ? 'disabled' : ''"
+      class="pagination__item"
+      th:unless="${page.first}"
+    >
+      <i class="bx bx-chevron-left"></i>
+    </a>
+    <span class="pagination__item disabled" th:if="${page.first}">
+      <i class="bx bx-chevron-left"></i>
+    </span>
+
+    <th:block th:if="${page.totalPages <= 7}">
+      <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+        <a
+          th:href="@{${baseUrl}(page=${i})}"
+          class="pagination__item"
+          th:classappend="${page.page == i} ? 'active' : ''"
+          th:text="${i + 1}"
+        >
+        </a>
+      </th:block>
+    </th:block>
+
+    <th:block th:if="${page.totalPages > 7}">
+      <a
+        th:href="@{${baseUrl}(page=0)}"
+        class="pagination__item"
+        th:classappend="${page.page == 0} ? 'active' : ''"
+      >
+        1
+      </a>
+
+      <span class="pagination__item disabled" th:if="${page.page > 3}"
+        >...</span
+      >
+
+      <th:block
+        th:with="start=${T(java.lang.Math).max(1, page.page - 1)}, end=${T(java.lang.Math).min(page.totalPages - 2, page.page + 1)}"
+        th:if="${start <= end}"
+      >
+        <th:block th:each="i : ${#numbers.sequence(start, end)}">
+          <a
+            th:href="@{${baseUrl}(page=${i})}"
+            class="pagination__item"
+            th:classappend="${page.page == i} ? 'active' : ''"
+            th:text="${i + 1}"
+          >
+          </a>
+        </th:block>
+      </th:block>
+
+      <span
+        class="pagination__item disabled"
+        th:if="${page.page < page.totalPages - 4}"
+        >...</span
+      >
+
+      <a
+        th:href="@{${baseUrl}(page=${page.totalPages - 1})}"
+        class="pagination__item"
+        th:classappend="${page.page == page.totalPages - 1} ? 'active' : ''"
+      >
+        [[${page.totalPages}]]
+      </a>
+    </th:block>
+
+    <!-- Next -->
+    <a
+      th:href="@{${baseUrl}(page=${page.page + 1})}"
+      th:classappend="${page.last} ? 'disabled' : ''"
+      class="pagination__item"
+      th:unless="${page.last}"
+    >
+      <i class="bx bx-chevron-right"></i>
+    </a>
+    <span class="pagination__item disabled" th:if="${page.last}">
+      <i class="bx bx-chevron-right"></i>
+    </span>
+  </nav>
+
+  <nav
+    th:fragment="paginationProducts(page, baseUrl, category, brand, q, minPrice, maxPrice, sort)"
+    class="pagination pagination--modern"
+    th:if="${page.totalPages > 1}"
+  >
+    <a
+      th:href="@{${baseUrl}(page=${page.page - 1}, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+      class="pagination__item pagination__item--nav"
+      th:unless="${page.first}"
+      aria-label="Trang trước"
+      data-page-link
+    >
+      <i class="bx bx-chevron-left"></i>
+    </a>
+    <span
+      class="pagination__item disabled pagination__item--nav"
+      th:if="${page.first}"
+    >
+      <i class="bx bx-chevron-left"></i>
+    </span>
+
+    <th:block th:if="${page.totalPages <= 7}">
+      <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+        <a
+          th:href="@{${baseUrl}(page=${i}, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+          class="pagination__item"
+          th:classappend="${page.page == i} ? 'active' : ''"
+          th:text="${i + 1}"
+          data-page-link
+        >
+        </a>
+      </th:block>
+    </th:block>
+
+    <th:block th:if="${page.totalPages > 7}">
+      <a
+        th:href="@{${baseUrl}(page=0, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+        class="pagination__item"
+        th:classappend="${page.page == 0} ? 'active' : ''"
+        data-page-link
+      >
+        1
+      </a>
+
+      <span class="pagination__item disabled" th:if="${page.page > 3}"
+        >...</span
+      >
+
+      <th:block
+        th:with="start=${T(java.lang.Math).max(1, page.page - 1)}, end=${T(java.lang.Math).min(page.totalPages - 2, page.page + 1)}"
+        th:if="${start <= end}"
+      >
+        <th:block th:each="i : ${#numbers.sequence(start, end)}">
+          <a
+            th:href="@{${baseUrl}(page=${i}, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+            class="pagination__item"
+            th:classappend="${page.page == i} ? 'active' : ''"
+            th:text="${i + 1}"
+            data-page-link
+          >
+          </a>
+        </th:block>
+      </th:block>
+
+      <span
+        class="pagination__item disabled"
+        th:if="${page.page < page.totalPages - 4}"
+        >...</span
+      >
+
+      <a
+        th:href="@{${baseUrl}(page=${page.totalPages - 1}, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+        class="pagination__item"
+        th:classappend="${page.page == page.totalPages - 1} ? 'active' : ''"
+        data-page-link
+      >
+        [[${page.totalPages}]]
+      </a>
+    </th:block>
+
+    <a
+      th:href="@{${baseUrl}(page=${page.page + 1}, category=${category}, brand=${brand}, q=${q}, minPrice=${minPrice}, maxPrice=${maxPrice}, sort=${sort})}"
+      class="pagination__item pagination__item--nav"
+      th:unless="${page.last}"
+      aria-label="Trang sau"
+      data-page-link
+    >
+      <i class="bx bx-chevron-right"></i>
+    </a>
+    <span
+      class="pagination__item disabled pagination__item--nav"
+      th:if="${page.last}"
+    >
+      <i class="bx bx-chevron-right"></i>
+    </span>
+  </nav>
+</html>

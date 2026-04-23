@@ -1,0 +1,39 @@
+.skeleton-loader {
+  background: var(--bg-card, #1e1e24);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.skeleton-loader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0));
+  animation: skeleton-shimmer 2s infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-line {
+  height: 20px;
+  margin-bottom: 10px;
+  background-color: var(--border-color, #3a3a45);
+  border-radius: 4px;
+}
+
+.skeleton-rect {
+  height: 200px;
+  background-color: var(--border-color, #3a3a45);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}

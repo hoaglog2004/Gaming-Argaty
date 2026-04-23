@@ -1,0 +1,375 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/admin}"
+>
+  <head>
+    <title>Quản lý sản phẩm</title>
+  </head>
+
+  <body>
+    <div layout:fragment="content">
+      <div class="admin-page-header">
+        <h1 class="admin-page-title">Quản lý sản phẩm</h1>
+        <div class="admin-page-actions">
+          <a th:href="@{/admin/products/create}" class="btn btn-primary">
+            <i class="bx bx-plus"></i> Thêm sản phẩm
+          </a>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <form
+        id="filterForm"
+        th:action="@{/admin/products}"
+        method="get"
+        class="admin-filters mb-4"
+      >
+        <div class="admin-search">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            name="q"
+            class="form-control"
+            placeholder="Tìm tên, SKU..."
+            th:value="${searchKeyword}"
+            onchange="this.form.submit()"
+          />
+        </div>
+
+        <select
+          class="form-control form-select admin-filter-select"
+          name="categoryId"
+          onchange="this.form.submit()"
+        >
+          <option value="">Tất cả danh mục</option>
+          <option
+            th:each="cat : ${categories}"
+            th:value="${cat.id}"
+            th:text="${cat.name}"
+            th:selected="${selectedCategoryId == cat.id}"
+          ></option>
+        </select>
+
+        <select
+          class="form-control form-select admin-filter-select"
+          name="brandId"
+          onchange="this.form.submit()"
+        >
+          <option value="">Tất cả thương hiệu</option>
+          <option
+            th:each="brand : ${brands}"
+            th:value="${brand.id}"
+            th:text="${brand.name}"
+            th:selected="${selectedBrandId == brand.id}"
+          ></option>
+        </select>
+
+        <select
+          class="form-control form-select"
+          name="sortField"
+          onchange="this.form.submit()"
+          style="width: 150px"
+        >
+          <option value="createdAt" th:selected="${sortField == 'createdAt'}">
+            Ngày tạo
+          </option>
+          <option value="price" th:selected="${sortField == 'price'}">
+            Giá tiền
+          </option>
+          <option value="soldCount" th:selected="${sortField == 'soldCount'}">
+            Lượt bán
+          </option>
+          <option value="quantity" th:selected="${sortField == 'quantity'}">
+            Tồn kho
+          </option>
+        </select>
+
+        <select
+          class="form-control form-select"
+          name="sortDir"
+          onchange="this.form.submit()"
+          style="width: 120px"
+        >
+          <option value="desc" th:selected="${sortDir == 'desc'}">
+            Giảm dần
+          </option>
+          <option value="asc" th:selected="${sortDir == 'asc'}">
+            Tăng dần
+          </option>
+        </select>
+
+        <a
+          th:href="@{/admin/products}"
+          class="btn btn-outline-secondary"
+          title="Xóa bộ lọc"
+        >
+          <i class="bx bx-refresh"></i>
+        </a>
+      </form>
+
+      <!-- Products Table -->
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 40px">
+                <input type="checkbox" onchange="toggleSelectAllRows(this)" />
+              </th>
+              <th>Sản phẩm</th>
+              <th>SKU</th>
+              <th>Danh mục</th>
+              <th>Giá</th>
+              <th>Kho</th>
+              <th>Trạng thái</th>
+              <th style="width: 120px">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="product : ${products.content}">
+              <td><input type="checkbox" th:value="${product.id}" /></td>
+              <td>
+                <div class="d-flex align-center gap-3">
+                  <div
+                    style="
+                      width: 50px;
+                      height: 50px;
+                      border-radius: 8px;
+                      overflow: hidden;
+                      background: var(--bg-void);
+                    "
+                  >
+                    <img
+                      th:src="${product.mainImage}"
+                      th:alt="${product.name}"
+                      style="width: 100%; height: 100%; object-fit: cover"
+                    />
+                  </div>
+                  <div>
+                    <p class="mb-0" th:text="${product.name}">Tên sản phẩm</p>
+                    <small class="text-muted" th:text="${product.brandName}"
+                      >Thương hiệu</small
+                    >
+                  </div>
+                </div>
+              </td>
+              <td><code th:text="${product.sku}">SKU</code></td>
+              <td th:text="${product.categoryName}">Danh mục</td>
+              <td>
+                <span
+                  class="text-cyan"
+                  th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"
+                  >0 ₫</span
+                >
+                <div
+                  th:if="${product.isBestSeller}"
+                  class="badge badge-hot mt-1"
+                >
+                  Bán chạy
+                </div>
+                <br th:if="${product.salePrice}" />
+                <small
+                  th:if="${product.salePrice}"
+                  class="text-success"
+                  th:text="'Sale: ' + ${#numbers.formatDecimal(product.salePrice, 0, 'COMMA', 0, 'POINT')} + ' ₫'"
+                ></small>
+              </td>
+              <td>
+                <span
+                  th:if="${product.quantity > 10}"
+                  class="text-success"
+                  th:text="${product.quantity}"
+                  >0</span
+                >
+                <span
+                  th:if="${product.quantity > 0 && product.quantity <= 10}"
+                  class="text-warning"
+                  th:text="${product.quantity}"
+                  >0</span
+                >
+                <span th:if="${product.quantity <= 0}" class="text-danger"
+                  >Hết hàng</span
+                >
+              </td>
+              <td>
+                <div class="d-flex gap-1 flex-wrap">
+                  <span
+                    th:if="${product.isActive}"
+                    class="status-badge status-badge--completed"
+                    >Active</span
+                  >
+                  <span
+                    th:unless="${product.isActive}"
+                    class="status-badge status-badge--cancelled"
+                    >Inactive</span
+                  >
+                  <span
+                    th:if="${product.isFeatured}"
+                    class="status-badge status-badge--processing"
+                    title="Sản phẩm nổi bật"
+                    >★ Featured</span
+                  >
+                  <span
+                    th:if="${product.isNew}"
+                    class="status-badge status-badge--shipped"
+                    title="Sản phẩm mới"
+                    >New</span
+                  >
+                </div>
+              </td>
+              <td>
+                <div class="table-actions">
+                  <a
+                    th:href="@{/admin/products/{id}/edit(id=${product.id})}"
+                    class="table-action-btn edit"
+                    title="Sửa"
+                  >
+                    <i class="bx bx-edit"></i>
+                  </a>
+                  <a
+                    th:href="@{'/products/' + ${product.slug}}"
+                    class="table-action-btn"
+                    title="Xem"
+                    target="_blank"
+                    style="
+                      display: inline-flex;
+                      align-items: center;
+                      justify-content: center;
+                      text-decoration: none;
+                      color: inherit;
+                    "
+                  >
+                    <i class="bx bx-show"></i>
+                  </a>
+
+                  <!-- Toggle Featured -->
+                  <form
+                    th:action="@{/admin/products/{id}/toggle-featured(id=${product.id})}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button
+                      type="submit"
+                      class="table-action-btn"
+                      th:title="${product.isFeatured} ? 'Bỏ nổi bật' : 'Đánh dấu nổi bật'"
+                      th:classappend="${product.isFeatured} ? 'active' : ''"
+                    >
+                      <i class="bx bx-star"></i>
+                    </button>
+                  </form>
+
+                  <!-- Toggle New -->
+                  <form
+                    th:action="@{/admin/products/{id}/toggle-new(id=${product.id})}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button
+                      type="submit"
+                      class="table-action-btn"
+                      th:title="${product.isNew} ? 'Bỏ trạng thái mới' : 'Đánh dấu sản phẩm mới'"
+                      th:classappend="${product.isNew} ? 'active' : ''"
+                    >
+                      <i class="bx bx-badge"></i>
+                    </button>
+                  </form>
+
+                  <form
+                    th:action="@{/admin/products/{id}/delete(id=${product.id})}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <input
+                      type="hidden"
+                      th:name="${_csrf.parameterName}"
+                      th:value="${_csrf.token}"
+                    />
+                    <button
+                      type="button"
+                      class="table-action-btn delete"
+                      title="Xóa"
+                      onclick="
+                        confirmDelete(
+                          'Bạn có chắc muốn xóa sản phẩm này?',
+                          () => this.closest('form').submit(),
+                        )
+                      "
+                    >
+                      <i class="bx bx-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            <tr
+              th:if="${products.content == null || products.content.isEmpty()}"
+            >
+              <td colspan="8" class="text-center text-muted p-5">
+                <i
+                  class="bx bx-box"
+                  style="font-size: 48px; display: block; margin-bottom: 16px"
+                ></i>
+                Chưa có sản phẩm nào
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-between align-center mt-4">
+        <p class="text-muted mb-0">
+          Hiển thị <span th:text="${products.content.size()}">0</span> /
+          <span th:text="${products.totalElements}">0</span> sản phẩm
+        </p>
+        <th:block
+          th:replace="~{fragments/pagination :: pagination(${products}, '/admin/products')}"
+        ></th:block>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const paginationLinks = document.querySelectorAll(
+          ".pagination a.page-link",
+        );
+
+        paginationLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault(); // Chặn chuyển trang mặc định
+
+            // Lấy số trang từ href (ví dụ: ?page=1)
+            const url = new URL(this.href);
+            const page = url.searchParams.get("page") || 0;
+            const size = url.searchParams.get("size") || 20;
+
+            // Tạo input hidden cho page vào form và submit
+            const form = document.getElementById("filterForm");
+
+            let pageInput = form.querySelector("input[name='page']");
+            if (!pageInput) {
+              pageInput = document.createElement("input");
+              pageInput.type = "hidden";
+              pageInput.name = "page";
+              form.appendChild(pageInput);
+            }
+            pageInput.value = page;
+
+            // Submit form thay vì chuyển link
+            form.submit();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
