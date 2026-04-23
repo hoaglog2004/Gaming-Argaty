@@ -1,375 +1,365 @@
-# Argaty - Gaming Gear E-Commerce Platform
+# 🎮 Argaty - Gaming Gear E-Commerce Platform
 
-Argaty is a full-stack e-commerce platform focused on gaming gear and accessories.
+<div align="center">
 
-- Backend: Spring Boot 4, Spring Security, JPA, SQL Server
-- Frontend: React 19 + Vite 8 (separate FE app)
-- Auth: JWT + Refresh Token, OAuth2 social login
-- Core modules: Catalog, cart, checkout, payment flow, profile, admin dashboard
+[![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=java)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-6DB33F?style=for-the-badge&logo=spring-boot)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 
-## 1. Main Features
+A modern, full-stack e-commerce platform for gaming gear and accessories with JWT authentication, OAuth2 social login, and multiple payment integrations.
 
-### Customer
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Quick Start](#-quick-start) • [API Docs](#-api-examples) • [Contributing](#-contributing)
 
-- Browse products, categories, brands
-- Search, filter, sort, product detail page
-- Cart and wishlist
-- Checkout with address and voucher
-- Payment flow (COD, bank transfer, MoMo, ZaloPay)
-- Profile management, order history, order detail
-- Review and notification sections
+</div>
 
-### Admin
+---
 
-- Dashboard metrics
-- Product, category, brand, banner CRUD
-- Voucher management
-- Order status management
-- User management
+## 📋 Overview
 
-## 2. Tech Stack
+**Argaty** is a production-ready e-commerce solution designed specifically for gaming equipment retailers. Built with modern technologies, it provides a seamless shopping experience with advanced features like social authentication, multiple payment methods, and a comprehensive admin dashboard.
+
+### Key Highlights
+- 🛍️ **Full-featured storefront** with product catalog, search, and filtering
+- 💳 **Multiple payment methods** (COD, Bank Transfer, MoMo, ZaloPay)
+- 🔐 **Enterprise-grade authentication** (JWT + OAuth2)
+- 📊 **Powerful admin dashboard** for inventory and order management
+- 🚀 **Modern tech stack** with Spring Boot 4 & React 19
+- 📱 **Responsive design** optimized for all devices
+
+---
+
+## ✨ Features
+
+### 👥 Customer Features
+
+| Feature | Description |
+|---------|-------------|
+| 📦 **Product Catalog** | Browse products with categories, brands, and filtering |
+| 🔍 **Advanced Search** | Smart search with autocomplete and filters |
+| ❤️ **Wishlist** | Save favorite products for later |
+| 🛒 **Shopping Cart** | Persistent cart with quantity management |
+| 💰 **Checkout** | Multi-step checkout with address selection |
+| 🎟️ **Voucher System** | Apply promo codes for discounts |
+| 💳 **Payment Options** | COD, Bank Transfer, MoMo, ZaloPay |
+| 👤 **User Profile** | Account settings and preferences |
+| 📋 **Order Management** | View order history and tracking |
+| ⭐ **Reviews** | Leave and view product reviews |
+| 🔔 **Notifications** | Real-time order updates |
+
+### 🛠️ Admin Features
+
+| Feature | Description |
+|---------|-------------|
+| 📊 **Dashboard** | Real-time analytics and metrics |
+| 📦 **Product Management** | Create, update, delete products |
+| 🏷️ **Category Management** | Organize product categories |
+| 🎨 **Brand Management** | Manage brand information |
+| 🎯 **Banner Management** | Hero banners and promotions |
+| 🎟️ **Voucher Management** | Create and manage discount codes |
+| 📋 **Order Management** | Track and update order status |
+| 👥 **User Management** | Manage customer accounts |
+
+---
+
+## 🏗️ Tech Stack
 
 ### Backend
-
-- Java 17
-- Spring Boot 4.0.1
-- Spring Web MVC, Spring Security, Spring Data JPA
-- OAuth2 Client
-- SQL Server + Hibernate
-- JWT (jjwt)
-- Thymeleaf (legacy/server-rendered parts)
-- Spring Mail
+```
+┌─────────────────────────────────────┐
+│  Spring Boot 4.0.1 (Java 17)        │
+├─────────────────────────────────────┤
+│ • Spring Web MVC                    │
+│ • Spring Security + JWT             │
+│ • Spring Data JPA + Hibernate       │
+│ • OAuth2 Client (Google, Facebook)  │
+│ • Spring Mail                       │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│  Data & Infrastructure              │
+├─────────────────────────────────────┤
+│ • SQL Server                        │
+│ • jjwt (JWT library)                │
+│ • GHN Shipping API                  │
+└─────────────────────────────────────┘
+```
 
 ### Frontend
+```
+┌─────────────────────────────────────┐
+│  React 19 + Vite 8                  │
+├─────────────────────────────────────┤
+│ • React Router v6                   │
+│ • Axios (HTTP client)               │
+│ • Chart.js (Analytics)              │
+│ • Modern CSS/Tailwind               │
+└─────────────────────────────────────┘
+```
 
-- React 19
-- Vite 8
-- React Router
-- Axios
-- Chart.js
+---
 
-## 3. Repository Structure
+## 📁 Project Structure
 
-```text
+```
 argaty/
-|- src/main/java/com/argaty      # Spring Boot source
-|- src/main/resources            # application.properties, templates, static
-|- scripts/update-products.sql   # Utility SQL script for feature flags
-|- FE/                           # React + Vite frontend
-|  |- src/
-|  |- package.json
-|  |- vite.config.js
-|- pom.xml
-|- README.md
+├── 🔧 Backend (Spring Boot)
+│   ├── src/main/java/com/argaty
+│   │   ├── auth/              # Authentication & JWT
+│   │   ├── controller/        # REST endpoints
+│   │   ├── service/           # Business logic
+│   │   ├── repository/        # Data access
+│   │   ├── entity/            # JPA entities
+│   │   ├── dto/               # Data transfer objects
+│   │   ├── config/            # Spring configuration
+│   │   └── util/              # Utility classes
+│   ├── src/main/resources
+│   │   ├── application.properties
+│   │   ├── templates/         # Thymeleaf templates
+│   │   └── static/            # Static files
+│   ├── scripts/
+│   │   └── update-products.sql  # Data initialization
+│   └── pom.xml
+│
+├── 🎨 Frontend (React)
+│   └── FE/
+│       ├── src/
+│       │   ├── components/    # React components
+│       │   ├── pages/         # Page components
+│       │   ├── services/      # API services
+│       │   ├── hooks/         # Custom hooks
+│       │   ├── context/       # Context providers
+│       │   ├── styles/        # Global styles
+│       │   └── utils/         # Utilities
+│       ├── public/            # Static assets
+│       ├── package.json
+│       ├── vite.config.js
+│       └── .env.example
+│
+└── 📄 Root configuration
+    ├── README.md
+    ├── .gitignore
+    └── LICENSE
 ```
 
-## 4. Prerequisites
+---
 
-- Java 17+
-- Maven 3.9+
-- Node.js 20+ (recommended)
-- npm 10+
-- SQL Server (local or remote)
+## 🚀 Quick Start
 
-## 5. Quick Start (Local)
+### Prerequisites
 
-## 5.1 Clone project
+- **Java 17+** ([Download](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html))
+- **Maven 3.9+** ([Download](https://maven.apache.org/download.cgi))
+- **Node.js 20+** ([Download](https://nodejs.org/))
+- **npm 10+** (comes with Node.js)
+- **SQL Server 2019+** ([Download](https://www.microsoft.com/en-us/sql-server/sql-server-downloads))
 
-```powershell
-git clone <your-repository-url>
-cd argaty
+### Installation
+
+#### 1️⃣ Clone Repository
+```bash
+git clone https://github.com/hoaglog2004/Gaming-Argaty.git
+cd Gaming-Argaty
 ```
 
-## 5.2 Create database
-
-Create SQL Server database, for example:
-
+#### 2️⃣ Setup Database
 ```sql
+-- Create database
 CREATE DATABASE ArgatyDB;
+
+-- (Optional) Restore from backup or run migration scripts
 ```
 
-## 5.3 Configure backend
-
-Update `src/main/resources/application.properties` or override by environment variables.
-
-Minimal required values:
+#### 3️⃣ Configure Backend
+Create or update `src/main/resources/application.properties`:
 
 ```properties
+# Database
 spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=ArgatyDB;encrypt=true;trustServerCertificate=true
 spring.datasource.username=sa
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update
+
+# Server
+server.port=8080
+
+# JPA
+spring.jpa.show-sql=false
+spring.jpa.database-platform=org.hibernate.dialect.SQLServer2012Dialect
 ```
 
-## 5.4 Run backend
-
-```powershell
+#### 4️⃣ Start Backend
+```bash
+# Using Maven wrapper
 ./mvnw spring-boot:run
+
+# Or using installed Maven
+mvn spring-boot:run
 ```
 
-Backend runs at: `http://localhost:8080`
+Backend will be available at: **http://localhost:8080**
 
-## 5.5 Run frontend
-
-Open new terminal:
-
-```powershell
+#### 5️⃣ Start Frontend (New Terminal)
+```bash
 cd FE
 npm install
 npm run dev
 ```
 
-Frontend runs at: `http://localhost:5173`
+Frontend will be available at: **http://localhost:5173**
 
-Vite proxy is already configured:
+**Vite Proxy (Auto-configured):**
+- `/api/*` → `http://localhost:8080`
+- `/uploads/*` → `http://localhost:8080`
 
-- `/api -> http://localhost:8080`
-- `/uploads -> http://localhost:8080`
+---
 
-## 6. Build Commands
+## 🏗️ Build & Deployment
 
-### Backend
-
-```powershell
+### Build Backend
+```bash
+# Clean and package
 ./mvnw clean package
-```
 
-Artifact output:
+# Output: target/Argaty-0.0.1-SNAPSHOT.jar
 
-- `target/Argaty-0.0.1-SNAPSHOT.jar`
-
-Run packaged jar:
-
-```powershell
+# Run packaged jar
 java -jar target/Argaty-0.0.1-SNAPSHOT.jar
 ```
 
-### Frontend
-
-```powershell
+### Build Frontend
+```bash
 cd FE
-npm run build
-npm run preview
+npm run build    # Outputs to dist/
+npm run preview  # Preview production build locally
 ```
 
-## 7. Environment Variables (Recommended)
+---
 
-Do not hardcode secrets in production. Prefer environment variables.
+## 🔐 Environment Configuration
 
-### 7.1 Mail
+### Essential Variables
 
-- `MAIL_USERNAME`
-- `MAIL_PASSWORD`
-- `MAIL_FROM`
-- `APP_CONTACT_TO`
-
-### 7.2 URL config
-
-- `APP_BASE_URL` (backend base URL, default: `http://localhost:8080`)
-- `APP_FRONTEND_URL` (frontend URL, default: `http://localhost:5173`)
-
-### 7.3 OAuth2 social login
-
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `FACEBOOK_CLIENT_ID`
-- `FACEBOOK_CLIENT_SECRET`
-
-### 7.4 JWT and security
-
-- `APP_SECURITY_JWT_SECRET`
-- `APP_SECURITY_JWT_ACCESS_TOKEN_EXPIRY_MINUTES`
-- `APP_SECURITY_JWT_REFRESH_TOKEN_EXPIRY_DAYS`
-
-### 7.5 Admin bootstrap
-
-- `APP_ADMIN_BOOTSTRAP_ENABLED`
-- `APP_ADMIN_BOOTSTRAP_EMAIL`
-- `APP_ADMIN_BOOTSTRAP_PASSWORD`
-- `APP_ADMIN_BOOTSTRAP_FULL_NAME`
-
-### 7.6 Payment providers
-
-- Bank transfer:
-  - `PAYMENT_BANK_ENABLED`
-  - `PAYMENT_BANK_CODE`
-  - `PAYMENT_BANK_ACCOUNT_NO`
-  - `PAYMENT_BANK_ACCOUNT_NAME`
-- MoMo:
-  - `PAYMENT_MOMO_ENABLED`
-  - `PAYMENT_MOMO_PARTNER_CODE`
-  - `PAYMENT_MOMO_ACCESS_KEY`
-  - `PAYMENT_MOMO_SECRET_KEY`
-- ZaloPay:
-  - `PAYMENT_ZALOPAY_ENABLED`
-  - `PAYMENT_ZALOPAY_APP_ID`
-  - `PAYMENT_ZALOPAY_KEY1`
-  - `PAYMENT_ZALOPAY_KEY2`
-
-### 7.7 Shipping (GHN)
-
-- `SHIPPING_PRIMARY_PROVIDER`
-- `GHN_ENABLED`
-- `GHN_API_URL`
-- `GHN_TOKEN`
-- `GHN_SHOP_ID`
-- `GHN_ORIGIN_CITY`
-- `GHN_ORIGIN_DISTRICT`
-
-## 8. OAuth Redirect URIs
-
-When configuring Google/Facebook apps in developer console, set redirect URI to backend endpoint (example local):
-
-- `http://localhost:8080/login/oauth2/code/google`
-- `http://localhost:8080/login/oauth2/code/facebook`
-
-## 9. API Overview
-
-Frontend uses REST APIs under:
-
-- Base: `/api/v1`
-- Main groups:
-  - `/auth`
-  - `/products`, `/home`, `/newsletter`
-  - `/checkout`, `/payments`
-  - `/profile`, `/orders`, `/addresses`, `/wishlist`
-  - `/admin/*`
-
-## 10. Utility SQL Script
-
-File:
-
-- `scripts/update-products.sql`
-
-Purpose:
-
-- Mark featured/new/best-seller products
-- Mark featured categories
-
-Run this script after sample data import if home page sections are empty.
-
-## 11. Notes for Production
-
-- Set `spring.jpa.show-sql=false`
-- Set `server.error.include-stacktrace=never`
-- Move all secrets to environment or secret manager
-- Set secure CORS and trusted origins
-- Use strong JWT secret and rotate periodically
-- Disable admin bootstrap after first deployment
-
-## 12. Troubleshooting
-
-### Backend cannot connect to DB
-
-- Verify SQL Server is running
-- Verify username/password and port `1433`
-- Verify database exists (`ArgatyDB`)
-
-### Frontend cannot call API
-
-- Check backend is running on `8080`
-- Check FE is running on `5173`
-- Check `FE/vite.config.js` proxy config
-
-### Social login fails
-
-- Check client id/secret
-- Check redirect URI configured exactly
-- Check backend base URL and frontend URL env vars
-
-### Uploaded images not showing
-
-- Ensure `/uploads` folder exists and backend has read permission
-- Ensure Vite proxy for `/uploads` is active in dev
-
-## 13. Development Workflow
-
-1. Start backend (`./mvnw spring-boot:run`)
-2. Start frontend (`cd FE && npm run dev`)
-3. Implement feature
-4. Validate:
-   - Backend compile/test
-   - Frontend build (`npm run build`)
-
-## 14. License
-
-This project is currently used for internal/educational development.
-Add your license terms here (MIT/Apache-2.0/etc.) before public distribution.
-
-## 15. Huong Dan Nhanh (Tieng Viet)
-
-### 15.1 Chay local nhanh
-
-1. Tao database SQL Server: `ArgatyDB`
-2. Sua `src/main/resources/application.properties`:
-   - `spring.datasource.url`
-   - `spring.datasource.username`
-   - `spring.datasource.password`
-3. Chay backend:
-
-```powershell
-./mvnw spring-boot:run
+#### Mail Configuration
+```bash
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_FROM=noreply@argaty.com
+APP_CONTACT_TO=support@argaty.com
 ```
 
-4. Chay frontend:
-
-```powershell
-cd FE
-npm install
-npm run dev
+#### Security & URLs
+```bash
+APP_BASE_URL=http://localhost:8080
+APP_FRONTEND_URL=http://localhost:5173
+APP_SECURITY_JWT_SECRET=your-very-long-random-secret-key-min-256-bits
+APP_SECURITY_JWT_ACCESS_TOKEN_EXPIRY_MINUTES=30
+APP_SECURITY_JWT_REFRESH_TOKEN_EXPIRY_DAYS=7
 ```
 
-5. Truy cap:
-   - Backend: `http://localhost:8080`
-   - Frontend: `http://localhost:5173`
+#### OAuth2 (Google & Facebook)
+```bash
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+FACEBOOK_CLIENT_ID=your-facebook-app-id
+FACEBOOK_CLIENT_SECRET=your-facebook-app-secret
+```
 
-### 15.2 Bien moi truong nen cau hinh
+#### Payment Methods
+```bash
+# Bank Transfer
+PAYMENT_BANK_ENABLED=true
+PAYMENT_BANK_CODE=MB
+PAYMENT_BANK_ACCOUNT_NO=1234567890
+PAYMENT_BANK_ACCOUNT_NAME=Gaming Argaty Ltd
 
-- Mail: `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM`
-- URL: `APP_BASE_URL`, `APP_FRONTEND_URL`
-- OAuth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `FACEBOOK_CLIENT_ID`, `FACEBOOK_CLIENT_SECRET`
-- JWT: `APP_SECURITY_JWT_SECRET`
-- Thanh toan: nhom bien `PAYMENT_*`
-- Van chuyen: nhom bien `GHN_*`
+# MoMo
+PAYMENT_MOMO_ENABLED=true
+PAYMENT_MOMO_PARTNER_CODE=your-partner-code
+PAYMENT_MOMO_ACCESS_KEY=your-access-key
+PAYMENT_MOMO_SECRET_KEY=your-secret-key
 
-### 15.3 Luu y trien khai
+# ZaloPay
+PAYMENT_ZALOPAY_ENABLED=true
+PAYMENT_ZALOPAY_APP_ID=your-app-id
+PAYMENT_ZALOPAY_KEY1=your-key1
+PAYMENT_ZALOPAY_KEY2=your-key2
+```
 
-- Khong commit secret, token, mat khau vao repository
-- Tat SQL log va stacktrace chi tiet tren production
-- Doi JWT secret sang chuoi dai, ngau nhien
-- Tat admin bootstrap sau lan khoi tao dau tien
+#### Shipping (GHN)
+```bash
+SHIPPING_PRIMARY_PROVIDER=ghn
+GHN_ENABLED=true
+GHN_API_URL=https://dev-online-gateway.ghn.vn
+GHN_TOKEN=your-ghn-token
+GHN_SHOP_ID=your-shop-id
+GHN_ORIGIN_CITY=249
+GHN_ORIGIN_DISTRICT=1450
+```
 
-## 16. API Examples (Local)
+#### Admin Bootstrap (First Run Only)
+```bash
+APP_ADMIN_BOOTSTRAP_ENABLED=true
+APP_ADMIN_BOOTSTRAP_EMAIL=admin@argaty.com
+APP_ADMIN_BOOTSTRAP_PASSWORD=Admin@123
+APP_ADMIN_BOOTSTRAP_FULL_NAME=System Administrator
+```
 
-Base URL (backend):
+### OAuth Redirect URIs
 
-```text
+Configure these in your OAuth provider console:
+
+```
+http://localhost:8080/login/oauth2/code/google
+http://localhost:8080/login/oauth2/code/facebook
+```
+
+---
+
+## 📡 API Documentation
+
+### Base URL
+```
 http://localhost:8080/api/v1
 ```
 
-### 16.1 Login
+### API Groups
 
-Request:
+| Group | Endpoints | Purpose |
+|-------|-----------|---------|
+| `/auth` | login, refresh, logout, register | Authentication |
+| `/products` | list, detail, search, filter | Product catalog |
+| `/cart` | add, update, remove, list | Shopping cart |
+| `/checkout` | preview, validate, place-order | Order creation |
+| `/payments` | process, verify, history | Payment processing |
+| `/orders` | list, detail, status, cancel | Order management |
+| `/profile` | update, change-password, avatar | User profile |
+| `/addresses` | list, add, update, delete | Delivery addresses |
+| `/wishlist` | list, add, remove | Saved items |
+| `/admin/*` | products, users, orders, vouchers | Admin panel |
 
+### Example Requests
+
+#### 🔐 Login
 ```bash
 curl -X POST "http://localhost:8080/api/v1/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
-    "password": "123123",
+    "password": "password123",
     "rememberMe": true
   }'
 ```
 
-Typical success response shape:
-
+**Response:**
 ```json
 {
   "success": true,
-  "message": "Success",
+  "message": "Login successful",
   "data": {
-    "accessToken": "...",
-    "refreshToken": "...",
+    "accessToken": "eyJhbGc...",
+    "refreshToken": "eyJhbGc...",
     "id": 1,
     "fullName": "Nguyen Van A",
     "email": "user@example.com",
@@ -378,68 +368,243 @@ Typical success response shape:
 }
 ```
 
-### 16.2 Refresh token
-
+#### 🔄 Refresh Token
 ```bash
 curl -X POST "http://localhost:8080/api/v1/auth/refresh" \
   -H "Content-Type: application/json" \
-  -d '{
-    "refreshToken": "your-refresh-token"
-  }'
+  -d '{"refreshToken": "your-refresh-token"}'
 ```
 
-### 16.3 List products
-
+#### 📦 List Products
 ```bash
 curl "http://localhost:8080/api/v1/products?page=1&size=12&keyword=keyboard&sort=newest"
 ```
 
-### 16.4 Product detail by slug
-
+#### 📝 Product Detail
 ```bash
 curl "http://localhost:8080/api/v1/products/slug/logitech-g-pro-x-superlight"
 ```
 
-### 16.5 Checkout preview (Bearer token required)
-
-```bash
-curl "http://localhost:8080/api/v1/checkout/preview?addressId=1&voucherCode=SALE10" \
-  -H "Authorization: Bearer your-access-token"
-```
-
-### 16.6 Place order (Bearer token required)
-
+#### 🛒 Place Order
 ```bash
 curl -X POST "http://localhost:8080/api/v1/checkout/place-order" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer your-access-token" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
     "paymentMethod": "COD",
     "addressId": 1,
     "voucherCode": "SALE10",
-    "note": "Giao gio hanh chinh"
+    "note": "Please deliver during business hours"
   }'
 ```
 
-### 16.7 Upload avatar (Bearer token required)
-
+#### 📤 Upload Avatar
 ```bash
 curl -X POST "http://localhost:8080/api/v1/files/upload/avatar" \
-  -H "Authorization: Bearer your-access-token" \
-  -F "file=@D:/images/avatar.png"
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@/path/to/avatar.png"
 ```
 
-### 16.8 Admin product list (ADMIN token required)
+---
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+#### ❌ Database Connection Failed
+```
+Error: Cannot connect to SQL Server
+```
+
+**Solutions:**
+- Verify SQL Server is running (`services.msc` on Windows)
+- Check connection string: hostname, port (1433), database name
+- Verify credentials: username and password
+- Ensure firewall allows port 1433
+
+#### ❌ Port 8080 Already in Use
+```bash
+# Find process using port
+netstat -ano | findstr :8080
+
+# Kill process (Windows)
+taskkill /PID <PID> /F
+
+# Or use different port
+java -jar target/Argaty-0.0.1-SNAPSHOT.jar --server.port=8081
+```
+
+### Frontend Issues
+
+#### ❌ Cannot Connect to Backend API
+**Solutions:**
+- Verify backend is running: `http://localhost:8080`
+- Check frontend `.env` file points to correct backend URL
+- Verify Vite proxy config: `FE/vite.config.js`
+- Check browser console for CORS errors
+
+#### ❌ Port 5173 Already in Use
+```bash
+# Use different port
+npm run dev -- --port 3000
+```
+
+### Authentication Issues
+
+#### ❌ OAuth2 Login Fails
+**Solutions:**
+- Verify client ID/secret in environment variables
+- Check redirect URI is configured in OAuth provider console
+- Ensure URLs match exactly: `http://localhost:8080/login/oauth2/code/google`
+- Check JWT secret is set and strong enough
+
+#### ❌ Images Not Loading
+**Solutions:**
+- Ensure `/uploads` directory exists in backend
+- Verify Vite proxy for `/uploads` is configured
+- Check backend has read permissions on upload directory
+
+---
+
+## 📊 Data Initialization
+
+### Product Catalog Setup
+
+After importing initial data, run the utility script to mark featured items:
 
 ```bash
-curl "http://localhost:8080/api/v1/admin/products?page=1&size=20" \
-  -H "Authorization: Bearer your-admin-access-token"
+# Execute in SQL Server Management Studio
+sqlcmd -S localhost -U sa -P your_password -d ArgatyDB -i scripts/update-products.sql
 ```
 
-Note:
+**Script marks:**
+- Featured products (homepage hero)
+- New products (recent additions)
+- Best-seller products (popular items)
+- Featured categories
 
-- In frontend dev mode, call APIs via Vite proxy paths (`/api/...`) instead of hardcoding backend domain.
-- Frontend axios base path is `/api/v1` in `FE/src/services/apiClient.js`.
-#   A r g a t y 
- 
- 
+---
+
+## 🏭 Production Deployment
+
+### Pre-deployment Checklist
+
+- [ ] Set `spring.jpa.show-sql=false`
+- [ ] Set `server.error.include-stacktrace=never`
+- [ ] Move all secrets to environment/secret manager
+- [ ] Configure CORS and trusted origins
+- [ ] Use strong, randomly-generated JWT secret (min 256 bits)
+- [ ] Rotate JWT secrets periodically
+- [ ] Disable admin bootstrap after first run
+- [ ] Enable HTTPS/TLS
+- [ ] Setup proper logging (no sensitive data)
+- [ ] Configure database backups
+- [ ] Setup monitoring and alerting
+
+### Deployment Options
+
+**Option 1: Docker**
+```bash
+docker build -t argaty:latest .
+docker run -p 8080:8080 --env-file .env argaty:latest
+```
+
+**Option 2: Docker Compose**
+```bash
+docker-compose up -d
+```
+
+**Option 3: Cloud Platforms**
+- AWS EC2 / ECS / Elastic Beanstalk
+- Azure App Service / AKS
+- Google Cloud Run / App Engine
+- Heroku (if applicable)
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+### Development Guidelines
+
+- Follow existing code style and conventions
+- Write meaningful commit messages
+- Add tests for new features
+- Update documentation as needed
+- Ensure code compiles and all tests pass
+
+---
+
+## 📝 Development Workflow
+
+1. **Start Services**
+   ```bash
+   # Terminal 1: Backend
+   ./mvnw spring-boot:run
+   
+   # Terminal 2: Frontend
+   cd FE && npm run dev
+   ```
+
+2. **Make Changes**
+   - Edit code in your IDE
+   - Changes auto-reload (Vite HMR for frontend)
+
+3. **Validate Before Commit**
+   ```bash
+   # Backend
+   ./mvnw clean test
+   ./mvnw compile
+   
+   # Frontend
+   npm run build
+   npm run lint
+   ```
+
+4. **Git Workflow**
+   ```bash
+   git add .
+   git commit -m "feat: clear description of changes"
+   git push origin feature-branch
+   ```
+
+---
+
+## 📞 Support & Contact
+
+- 📧 **Email**: support@argaty.com
+- 💬 **Issues**: [GitHub Issues](https://github.com/hoaglog2004/Gaming-Argaty/issues)
+- 📖 **Wiki**: [Documentation](https://github.com/hoaglog2004/Gaming-Argaty/wiki)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see [LICENSE](LICENSE) file for details.
+
+**Note:** This project is currently used for internal/educational development. Before public distribution, ensure proper licensing and compliance.
+
+---
+
+## 🙏 Acknowledgments
+
+- Spring Boot & Spring Community
+- React & Vite teams
+- Contributors and maintainers
+
+---
+
+<div align="center">
+
+**⭐ If you found this project helpful, please consider giving it a star!**
+
+Made with ❤️ by the Argaty Team
+
+</div>
